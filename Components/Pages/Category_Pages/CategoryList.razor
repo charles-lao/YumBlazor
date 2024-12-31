@@ -1,0 +1,73 @@
+﻿@page "/category"
+@inject ICategoryRepository _categoryRepository
+
+@if(IsProcessing)
+{
+    <div class="position-absolute w-75 h-75 d-flex flex-column align-items-center bg-white justify-content-center">
+        <img src="/images/loading.gif" alt="loading" />
+    </div>
+}
+else
+{
+    <div class="card shadow border-0 mt-4">
+        <div class="cardaccordion-header bg-black bg-gradient ml-0 py-3">
+            <div class="row">
+                <div class="col-12 text-center">
+                    <h2 class="text-white py-2">Category list</h2>
+                </div>
+            </div>
+        </div>
+        <div class="card-body p-4">
+            <div class="row pb-3">
+                <div class="col-12 text-end">
+                    <button class="btn btn-lg btn-secondary" style="width:250px;">Add New Category</button>
+                </div>
+            </div>
+            @if(Categories.Any())
+            {
+                <table class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach(var obj in Categories)
+                        {
+                            <tr>
+                                <td>
+                                    @obj.Name
+                                </td>
+                                <td>
+                                    Buttons
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+
+        </div>
+    </div>
+}
+
+@code {
+    public bool IsProcessing { get; set; } = false;
+    private IEnumerable<Category> Categories { get; set; } = new List<Category>(); 
+
+    protected override async Task OnInitializedAsync()
+    {
+        IsProcessing = true;
+        await LoadCategories();
+        Thread.Sleep(5000);
+        IsProcessing = false;
+    }
+
+    private async Task LoadCategories()
+    { 
+        Categories = await _categoryRepository.GetAllAsync();
+        // load categories
+    }
+
+}
