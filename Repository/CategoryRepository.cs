@@ -33,7 +33,7 @@ namespace YumBlazor.Repository
         public async Task<Category> GetAsync(int id)
         {
             var obj = await _db.Category.FirstOrDefaultAsync(u => u.Id == id);
-            if(obj == null)
+            if (obj == null)
             {
                 return new Category();
             }
@@ -46,8 +46,8 @@ namespace YumBlazor.Repository
         }
 
         public async Task<Category> UpdateAsync(Category obj)
-        { 
-            var objFromDb = await _db.Category.FirstOrDefaultAsync(u=> u.Id == obj.Id);
+        {
+            var objFromDb = await _db.Category.FirstOrDefaultAsync(u => u.Id == obj.Id);
             if (objFromDb is not null)
             {
                 objFromDb.Name = obj.Name;
