@@ -18,6 +18,9 @@ namespace YumBlazor.Components.Account
         [DoesNotReturn]
         public void RedirectTo(string? uri)
         {
+            
+            
+
             uri ??= "";
 
             // Prevent open redirects.
@@ -30,6 +33,9 @@ namespace YumBlazor.Components.Account
             // So as long as this is called from a statically rendered Identity component, the InvalidOperationException is never thrown.
             navigationManager.NavigateTo(uri);
             throw new InvalidOperationException($"{nameof(IdentityRedirectManager)} can only be used during static rendering.");
+            
+            
+           
         }
 
         [DoesNotReturn]
