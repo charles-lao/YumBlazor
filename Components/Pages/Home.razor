@@ -1,7 +1,105 @@
 ﻿@page "/"
+@using System.Globalization
+@inject IProductRepository _productRepository
+@inject ICategoryRepository _categoryRepository
 
 <PageTitle>Home</PageTitle>
+@if (IsProcessing)
+{
+    <div class="position-absoluteposition-absolute w-100 vh-100 d-flex flex-column align-items-center bg-white justify-content-center">
+        <img src="/images/loading.gif" alt="loading" />
+    </div>
+}
+else
+{
+    <div class="container-fluid px-0 m-0 full-width">
+        <div class="jumbotron-custom">
+            <div class="m-auto d-flex align-items-center" style="width: 400px; height: 50vh;">
 
-<h1>Hello, world!</h1>
+                <div class="d-flex align-items-center" style="width: 100%;">
+                    <input type="text" class="form-control rounded-pill"
+                    placeholder="Search for Food Items!"
+                    style="width: 100%; padding: 20px;">
+                    <span style="position: relative; left: -43px;"><i class="bi bi-search"></i></span>
+                </div>
+            </div>
+        </div>
 
-Welcome to your new app.
+        <div class="content px-4 m-2">
+            <ul class="nav nav-underline justify-content-center mb-2">
+                <li class="nav-item">
+                    <span class="nav-link" href="#" style="cursor: pointer">All</span>
+                </li>
+                @foreach(var category in Categories)
+                {
+                    <li class="nav-item">
+                        <span class="nav-link" href="#" style="cursor: pointer">@category.Name</span>
+                    </li>
+                }
+                
+            </ul>
+            <div class="row mt-4 mx-1">
+
+                @foreach( var prod in Products )
+                {
+                    <div class="col-12 col-md-6 col-lg-4 pe-3 mb-5">
+                        <div class="card">
+                            <div class="mt-3 mb-2 row">
+                                <div class="col-6 px-3">
+                                    @if(!string.IsNullOrEmpty(prod.SpecialTag))
+                                    {
+                                        <i class="bi bi-star btn btn-outline-success disabled"> @prod.SpecialTag</i>
+                                    }
+                                </div>
+                                <div class="col-6 text-end text-danger px-3 h3">
+                                    @prod.Price.ToString("C", CultureInfo.GetCultureInfo("en-us"))
+                                </div>
+                            </div>
+                            <div class="text-center">
+                                @if (!string.IsNullOrEmpty(prod.ImageUrl))
+                                {
+                                    <img class="card-img-top img-thumbnail img-rounded w-50 mt-2" src="@prod.ImageUrl" style="">
+                                }
+                                else
+                                {
+                                    <img class="card-img-top img-thumbnail img-rounded w-50 mt-2" src="images/default.png" style="">
+                                }
+                            </div>
+                            <div class="card-body">
+                                <h5 class="card-title text-center lead text-success">@prod.Name</h5>
+                                <p class="card-text mt-2">@((MarkupString)@prod.Description)</p>
+                                <h4 class="text-center">
+                                    <i class="bi bi-cart3 btn btn-success text-right  px-5 form-control"> Add to cart</i>
+                                </h4>
+
+
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+}
+
+@code{
+    private IEnumerable<Product> Products = new List<Product>();
+    private IEnumerable<Category> Categories = new List<Category>();
+    private bool IsProcessing { get; set; }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if(firstRender)
+        {
+            await LoadProducts();
+            IsProcessing = false;
+            StateHasChanged();
+        }
+    }
+
+    private async Task LoadProducts()
+    {
+        Products = await _productRepository.GetAllAsync();
+        Categories = await _categoryRepository.GetAllAsync();
+    }
+}                 
