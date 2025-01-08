@@ -1,6 +1,6 @@
 ﻿@using YumBlazor.Utility
 @inherits LayoutComponentBase
-@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject AuthenticationStateProvider _AuthenticationStateProvider
 
 
 <div class="page">
@@ -17,11 +17,6 @@
         {
             <NavBar></NavBar>
         }
-
-        <div class="top-row px-4">
-            <a href="https://learn.microsoft.com/aspnet/core/" target="_blank">About</a>
-        </div>
-
         
         @Body
       
@@ -48,7 +43,7 @@
 
     private async Task<bool> ShowNavBar()
     {
-        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var authState = await _AuthenticationStateProvider.GetAuthenticationStateAsync();
         var user = authState.User;
         var authenticated = user.Identity is not null && user.Identity.IsAuthenticated;
 
