@@ -21,6 +21,6 @@ namespace YumBlazor.Data
         [Required]
         public string ProductName { get; set; }
 
-        public ICollection<OrderDetail> OrderDetails { get; set; } = new List<OrderDetail>();
+        
     }
 }

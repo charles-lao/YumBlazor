@@ -31,5 +31,6 @@ namespace YumBlazor.Data
         [Required]
         public string Email { get; set; }
 
+        public ICollection<OrderDetail> OrderDetails { get; set; } = new List<OrderDetail>();
     }
 }
