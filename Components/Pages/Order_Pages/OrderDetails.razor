@@ -1,7 +1,9 @@
 ﻿@page "/order/details/{Id:int}"
 @using System.Globalization
+@using YumBlazor.Utility
 @inject IOrderRepository _orderRepository
-
+@inject IJSRuntime _JS
+@inject AuthenticationStateProvider _AuthenticationStateProvider
 
 @if(IsProcessing || OrderHeader == null)
 {
@@ -58,9 +60,21 @@ else
                         <a href="order/list" class="btn btn-secondary  m-2 p-2" style="width:150px;">Back to Orders</a>
                     </div>
                     <div class="col-7 text-end">
-                        <button class="btn btn-danger m-2 p-2" style="width:150px;">Cancelled</button>
-                        <button class="btn btn-primary m-2 p-2" style="width:150px;">Ready for Pickup</button>
-                        <button class="btn btn-success m-2 p-2" style="width:150px;">Completed</button>
+                        @if(OrderHeader.Status != SD.StatusCancelled && OrderHeader.Status != SD.StatusCompleted
+                        && _AuthenticationStateProvider.GetAuthenticationStateAsync().GetAwaiter().GetResult().User?.IsInRole(SD.Role_Admin) == true)
+                        {
+                            <button class="btn btn-danger m-2 p-2" @onclick="()=>UpdateStatus(SD.StatusCancelled)" style="width:150px;">Cancelled</button>
+
+                            @if(OrderHeader.Status == SD.StatusPending)
+                            {
+                                <button class="btn btn-primary m-2 p-2" @onclick="()=>UpdateStatus(SD.StatusReadyForPickUp)" style="width:150px;">Ready for Pickup</button>
+                            }
+
+                            @if(OrderHeader.Status == SD.StatusReadyForPickUp)
+                            {
+                                <button class="btn btn-success m-2 p-2" @onclick="()=>UpdateStatus(SD.StatusCompleted)" style="width:150px;">Completed</button>
+                            }
+                        }
                     </div>
                 </div>
             </div>
@@ -78,7 +92,7 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        
+
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -96,5 +110,11 @@ else
     {
         OrderHeader = await _orderRepository.GetAsync(Id);
         // load orderheaders
+    }
+
+    private async Task UpdateStatus(string newStatus)
+    {
+        await _orderRepository.UpdateStatusAsync(Id, newStatus);
+        _JS?.ToastrSuccess("Status updated succesfully to "+ newStatus);
     }
 }
