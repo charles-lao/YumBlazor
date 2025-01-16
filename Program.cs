@@ -31,6 +31,36 @@ builder.Services.AddAuthentication(options =>
         options.DefaultScheme = IdentityConstants.ApplicationScheme;
         options.DefaultSignInScheme = IdentityConstants.ExternalScheme;
     })
+    .AddFacebook(options=>
+    {
+<<<<<<< HEAD
+        options.AppId = "test"; 
+        options.AppSecret = "test"; 
+    })
+    .AddMicrosoftAccount(options =>
+    {
+        options.ClientId = "test"; 
+        options.ClientSecret = "test"; 
+    })
+    .AddGoogle(options =>
+    {
+        options.ClientId = "test"; 
+        options.ClientSecret = "test"; 
+=======
+        options.AppId = "test";
+        options.AppSecret = "test";
+    })
+    .AddMicrosoftAccount(options =>
+    {
+        options.ClientId = "test";
+        options.ClientSecret = "test";
+    })
+    .AddGoogle(options =>
+    {
+        options.ClientId = "test";
+        options.ClientSecret = "test";
+>>>>>>> 24f0368 (Add Social Logins)
+    })
     .AddIdentityCookies();
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
