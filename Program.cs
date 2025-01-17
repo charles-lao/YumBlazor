@@ -33,7 +33,6 @@ builder.Services.AddAuthentication(options =>
     })
     .AddFacebook(options=>
     {
-<<<<<<< HEAD
         options.AppId = "test"; 
         options.AppSecret = "test"; 
     })
@@ -46,20 +45,6 @@ builder.Services.AddAuthentication(options =>
     {
         options.ClientId = "test"; 
         options.ClientSecret = "test"; 
-=======
-        options.AppId = "test";
-        options.AppSecret = "test";
-    })
-    .AddMicrosoftAccount(options =>
-    {
-        options.ClientId = "test";
-        options.ClientSecret = "test";
-    })
-    .AddGoogle(options =>
-    {
-        options.ClientId = "test";
-        options.ClientSecret = "test";
->>>>>>> 24f0368 (Add Social Logins)
     })
     .AddIdentityCookies();
 
